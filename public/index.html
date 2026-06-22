@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dash de Renovações — Board Academy</title>
+<title>Dash de Renovações — Board Academy - Time de Inteligência Comercial</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
@@ -25,6 +25,14 @@
     --total: #a78bfa;
     --total-dim: rgba(167,139,250,0.12);
     --accent: #6366f1;
+    --club-bc: #06b6d4;
+    --club-bc-dim: rgba(6,182,212,0.12);
+    --club-bs: #f59e0b;
+    --club-bs-dim: rgba(245,158,11,0.12);
+    --club-latam: #ec4899;
+    --club-latam-dim: rgba(236,72,153,0.12);
+    --club-other: #6b7280;
+    --club-other-dim: rgba(107,114,128,0.12);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,10 +54,8 @@
     flex-wrap: wrap;
     gap: 16px;
   }
-
   .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: #fff; }
   .header-left p { color: var(--muted); font-size: 13px; margin-top: 4px; }
-
   .tag {
     display: inline-block;
     background: var(--accent);
@@ -75,19 +81,12 @@
     flex-wrap: wrap;
     margin-bottom: 16px;
   }
-
   .filter-group { display: flex; flex-direction: column; gap: 6px; }
-
   .filter-group label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
   }
-
-  .filter-group input,
-  .filter-group select {
+  .filter-group input, .filter-group select {
     background: var(--surface2);
     border: 1px solid var(--border);
     color: var(--text);
@@ -96,12 +95,10 @@
     padding: 8px 12px;
     border-radius: 8px;
     outline: none;
-    min-width: 160px;
+    min-width: 150px;
     transition: border-color 0.15s;
   }
-
-  .filter-group input:focus,
-  .filter-group select:focus { border-color: var(--accent); }
+  .filter-group input:focus, .filter-group select:focus { border-color: var(--accent); }
 
   .btn-buscar {
     background: var(--accent);
@@ -113,17 +110,14 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: opacity 0.15s, transform 0.1s;
     white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: opacity 0.15s;
   }
-
   .btn-buscar:hover { opacity: 0.85; }
-  .btn-buscar:active { transform: scale(0.98); }
   .btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
-
   .spinner {
     width: 14px; height: 14px;
     border: 2px solid rgba(255,255,255,0.3);
@@ -144,142 +138,81 @@
     padding: 16px 20px;
     margin-bottom: 24px;
   }
-
-  .empresas-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-  }
-
+  .empresas-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .empresas-title { font-size: 13px; font-weight: 600; color: #fff; }
-
   .btn-add-empresa {
     background: transparent;
     border: 1px dashed var(--border);
     color: var(--accent);
     font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+    font-size: 12px; font-weight: 600;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer;
     transition: border-color 0.15s, background 0.15s;
   }
   .btn-add-empresa:hover { border-color: var(--accent); background: rgba(99,102,241,0.08); }
-
   #empresasList { display: flex; flex-direction: column; gap: 10px; }
-
   .empresa-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    flex-wrap: wrap;
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px; flex-wrap: wrap;
   }
-
   .empresa-status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--muted);
-    flex-shrink: 0;
-    transition: background 0.3s;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); flex-shrink: 0; transition: background 0.3s;
   }
   .empresa-status-dot.ok { background: var(--active); }
   .empresa-status-dot.error { background: var(--canceled); }
   .empresa-status-dot.loading { background: var(--renewal); animation: pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
   .empresa-nome-input {
-    background: transparent;
-    border: none;
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    outline: none;
-    min-width: 140px;
-    max-width: 200px;
+    background: transparent; border: none; color: #fff;
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    outline: none; min-width: 140px; max-width: 200px;
   }
-
   .empresa-token-input {
-    background: transparent;
-    border: none;
-    border-left: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    outline: none;
-    flex: 1;
-    min-width: 200px;
-    padding-left: 12px;
+    background: transparent; border: none;
+    border-left: 1px solid var(--border); color: var(--muted);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    outline: none; flex: 1; min-width: 200px; padding-left: 12px;
   }
   .empresa-token-input::placeholder { color: var(--border); }
-
   .btn-remove-empresa {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
-    font-size: 16px;
-    padding: 0 2px;
-    line-height: 1;
-    transition: color 0.15s;
-    flex-shrink: 0;
+    background: transparent; border: none; color: var(--muted);
+    cursor: pointer; font-size: 16px; padding: 0 2px; line-height: 1;
+    transition: color 0.15s; flex-shrink: 0;
   }
   .btn-remove-empresa:hover { color: var(--canceled); }
 
   /* ABAS */
-  .empresa-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+  .tabs-row {
+    display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap;
   }
-
-  .empresa-tab {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 16px;
-    border-radius: 20px;
-    cursor: pointer;
+  .tab-btn {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--muted); font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 16px; border-radius: 20px; cursor: pointer;
     transition: all 0.15s;
   }
-  .empresa-tab:hover { border-color: var(--accent); color: var(--text); }
-  .empresa-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .empresa-tab.consolidado { background: var(--total-dim); border-color: var(--total); color: var(--total); }
-  .empresa-tab.consolidado.active { background: var(--total); color: #fff; }
+  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab-btn.consolidado { background: var(--total-dim); border-color: var(--total); color: var(--total); }
+  .tab-btn.consolidado.active { background: var(--total); color: #fff; }
 
-  /* CARDS */
+  /* CARDS KPI */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
   }
-
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px; position: relative; overflow: hidden;
   }
-
   .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 12px 12px 0 0;
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; border-radius: 12px 12px 0 0;
   }
   .card.total::before { background: var(--total); }
   .card.active::before { background: var(--active); }
@@ -287,146 +220,162 @@
   .card.renewal::before { background: var(--renewal); }
   .card.renewed::before { background: var(--renewed); }
 
-  .card-icon {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    margin-bottom: 14px;
-  }
-  .card.total .card-icon { background: var(--total-dim); }
-  .card.active .card-icon { background: var(--active-dim); }
-  .card.canceled .card-icon { background: var(--canceled-dim); }
-  .card.renewal .card-icon { background: var(--renewal-dim); }
-  .card.renewed .card-icon { background: var(--renewed-dim); }
-
   .card-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    margin-bottom: 8px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px;
   }
-
   .card-value {
-    font-size: 36px;
-    font-weight: 700;
+    font-size: 32px; font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
-    letter-spacing: -1px;
-    color: #fff;
-    line-height: 1;
+    letter-spacing: -1px; line-height: 1;
   }
   .card.total .card-value { color: var(--total); }
   .card.active .card-value { color: var(--active); }
   .card.canceled .card-value { color: var(--canceled); }
   .card.renewal .card-value { color: var(--renewal); }
   .card.renewed .card-value { color: var(--renewed); }
-
   .card-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  /* CARDS CLUBE */
+  .club-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .club-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px;
+  }
+  .club-card-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  }
+  .club-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .club-dot.bc { background: var(--club-bc); }
+  .club-dot.bs { background: var(--club-bs); }
+  .club-dot.latam { background: var(--club-latam); }
+  .club-dot.other { background: var(--club-other); }
+
+  .club-name {
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+  }
+  .club-name.bc { color: var(--club-bc); }
+  .club-name.bs { color: var(--club-bs); }
+  .club-name.latam { color: var(--club-latam); }
+  .club-name.other { color: var(--club-other); }
+
+  .club-metrics { display: flex; flex-direction: column; gap: 6px; }
+  .club-metric {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .club-metric-label { font-size: 11px; color: var(--muted); }
+  .club-metric-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 600; color: #fff;
+  }
+  .club-metric-val.green { color: var(--active); }
+  .club-metric-val.red { color: var(--canceled); }
+  .club-metric-val.blue { color: var(--renewed); }
+  .club-metric-val.yellow { color: var(--renewal); }
+
+  /* FILTROS DA TABELA */
+  .table-filters {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px 12px 0 0;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .table-filters h2 { font-size: 14px; font-weight: 600; color: #fff; }
+  .table-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ctrl-select, .ctrl-input, .ctrl-date {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Inter', sans-serif;
+    font-size: 12px; padding: 6px 10px; border-radius: 6px; outline: none;
+  }
+  .ctrl-input { width: 170px; }
+  .ctrl-input::placeholder { color: var(--muted); }
+  .ctrl-date { width: 140px; }
 
   /* TABELA */
   .table-section {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
     overflow: hidden;
   }
-
-  .table-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .table-header h2 { font-size: 14px; font-weight: 600; color: #fff; }
-
-  .table-controls { display: flex; gap: 8px; align-items: center; }
-
-  .filter-status, .search-input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    outline: none;
-  }
-  .search-input { width: 180px; }
-  .search-input::placeholder { color: var(--muted); }
-
   table { width: 100%; border-collapse: collapse; }
-
   thead th {
-    padding: 10px 20px;
-    text-align: left;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    background: var(--surface2);
-    border-bottom: 1px solid var(--border);
+    padding: 10px 16px; text-align: left;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+    white-space: nowrap;
   }
-
+  thead th:hover { color: var(--text); }
   tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: var(--surface2); }
-
-  tbody td { padding: 12px 20px; font-size: 13px; color: var(--text); vertical-align: middle; }
+  tbody td { padding: 11px 16px; font-size: 13px; color: var(--text); vertical-align: middle; }
 
   .status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 3px 9px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
   }
   .status-badge.active { background: var(--active-dim); color: var(--active); }
   .status-badge.canceled { background: var(--canceled-dim); color: var(--canceled); }
   .status-badge.started { background: var(--renewal-dim); color: var(--renewal); }
-  .status-badge.expired { background: rgba(156,163,175,0.12); color: #9ca3af; }
-  .status-badge.inactive { background: rgba(156,163,175,0.12); color: #9ca3af; }
+  .status-badge.expired, .status-badge.inactive { background: rgba(156,163,175,0.12); color: #9ca3af; }
   .status-badge.pastdue { background: rgba(249,115,22,0.12); color: #f97316; }
   .status-badge.trial { background: rgba(99,102,241,0.12); color: #818cf8; }
   .status-badge.renovada { background: var(--renewed-dim); color: var(--renewed); }
 
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .club-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+  }
+  .club-badge.bc { background: var(--club-bc-dim); color: var(--club-bc); }
+  .club-badge.bs { background: var(--club-bs-dim); color: var(--club-bs); }
+  .club-badge.latam { background: var(--club-latam-dim); color: var(--club-latam); }
+  .club-badge.other { background: var(--club-other-dim); color: var(--club-other); }
+
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
   .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
   .muted-cell { color: var(--muted); }
 
+  .renewal-soon {
+    color: var(--renewal);
+    font-weight: 600;
+  }
+  .renewal-today { color: var(--canceled); font-weight: 700; }
+  .renewal-ok { color: var(--muted); }
+
   /* PAGINAÇÃO */
   .pagination {
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    padding: 14px 20px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   }
   .pagination-info { font-size: 12px; color: var(--muted); }
   .pagination-btns { display: flex; gap: 6px; }
-
   .btn-page {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Inter', sans-serif;
+    font-size: 12px; padding: 5px 12px; border-radius: 6px; cursor: pointer;
     transition: border-color 0.15s;
   }
   .btn-page:hover { border-color: var(--accent); }
@@ -438,17 +387,16 @@
   .empty-state small { font-size: 12px; display: block; margin-top: 4px; }
 
   .error-msg {
-    background: var(--canceled-dim);
-    border: 1px solid var(--canceled);
-    color: var(--canceled);
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 13px;
-    margin-bottom: 20px;
-    display: none;
+    background: var(--canceled-dim); border: 1px solid var(--canceled);
+    color: var(--canceled); padding: 12px 16px; border-radius: 8px;
+    font-size: 13px; margin-bottom: 20px; display: none;
   }
-
   .last-update { font-size: 11px; color: var(--muted); text-align: right; margin-top: 12px; }
+
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--muted); margin-bottom: 10px;
+  }
 </style>
 </head>
 <body>
@@ -463,14 +411,11 @@
 
 <div class="error-msg" id="errorMsg"></div>
 
+<!-- FILTROS GLOBAIS -->
 <div class="filters">
-  <div class="filter-group" style="flex:1; min-width:200px;">
+  <div class="filter-group" style="flex:1;min-width:180px;">
     <label>Mês de referência</label>
     <input type="month" id="monthInput">
-  </div>
-  <div class="filter-group">
-    <label>Produto (opcional)</label>
-    <input type="text" id="productInput" placeholder="UUID do produto" style="min-width:200px;">
   </div>
   <button class="btn-buscar" id="btnBuscar" onclick="buscarDados()">
     <div class="spinner"></div>
@@ -478,6 +423,7 @@
   </button>
 </div>
 
+<!-- EMPRESAS -->
 <div class="empresas-section">
   <div class="empresas-header">
     <span class="empresas-title">Empresas conectadas</span>
@@ -486,57 +432,74 @@
   <div id="empresasList"></div>
 </div>
 
+<!-- ABAS EMPRESA -->
+<div id="empresaTabs" class="tabs-row" style="display:none"></div>
+
+<!-- KPI CARDS -->
+<div class="section-label">Visão geral</div>
 <div class="cards">
   <div class="card total">
-    <div class="card-icon">👥</div>
     <div class="card-label">Assinantes únicos</div>
     <div class="card-value" id="valTotal">—</div>
-    <div class="card-sub">contatos distintos (todos status)</div>
+    <div class="card-sub">contatos distintos</div>
   </div>
   <div class="card active">
-    <div class="card-icon">✅</div>
     <div class="card-label">Ativas</div>
     <div class="card-value" id="valActive">—</div>
-    <div class="card-sub">assinaturas com status active</div>
+    <div class="card-sub">status active</div>
   </div>
   <div class="card canceled">
-    <div class="card-icon">✕</div>
     <div class="card-label">Canceladas no mês</div>
     <div class="card-value" id="valCanceled">—</div>
-    <div class="card-sub">cancelled_at dentro do mês</div>
+    <div class="card-sub">cancelled_at no mês</div>
   </div>
   <div class="card renewal">
-    <div class="card-icon">🔄</div>
     <div class="card-label">Em renovação</div>
     <div class="card-value" id="valStarted">—</div>
     <div class="card-sub">status started</div>
   </div>
   <div class="card renewed">
-    <div class="card-icon">🔁</div>
     <div class="card-label">Renovadas no mês</div>
     <div class="card-value" id="valRenewed">—</div>
-    <div class="card-sub">active + charged_times ≥ 2 + último status no mês</div>
+    <div class="card-sub">active + ciclo ≥2 + status no mês</div>
+  </div>
+</div>
+
+<!-- CARDS POR CLUBE -->
+<div class="section-label">Por clube</div>
+<div class="club-cards" id="clubCards">
+  <!-- injetado via JS -->
+</div>
+
+<!-- TABELA -->
+<div class="table-filters">
+  <h2>Detalhamento de assinaturas</h2>
+  <div class="table-controls">
+    <input type="text" class="ctrl-input" id="searchInput" placeholder="Nome ou email..." oninput="filtrarTabela()">
+    <select class="ctrl-select" id="filterClub" onchange="filtrarTabela()">
+      <option value="">Todos os clubes</option>
+      <option value="bc">Board Club</option>
+      <option value="bs">Board Select</option>
+      <option value="latam">LATAM / México / Chile</option>
+      <option value="other">Outros</option>
+    </select>
+    <select class="ctrl-select" id="filterStatus" onchange="filtrarTabela()">
+      <option value="">Todos os status</option>
+      <option value="active">Ativa</option>
+      <option value="canceled">Cancelada</option>
+      <option value="started">Em renovação</option>
+      <option value="pastdue">Atrasada</option>
+      <option value="expired">Expirada</option>
+      <option value="inactive">Inativa</option>
+      <option value="trial">Trial</option>
+      <option value="renovada">Renovada no mês</option>
+    </select>
+    <input type="date" class="ctrl-date" id="filterRenewalDate" oninput="filtrarTabela()" title="Filtrar por data de renovação">
+    <button class="btn-page" onclick="limparFiltros()">Limpar</button>
   </div>
 </div>
 
 <div class="table-section">
-  <div class="table-header">
-    <h2>Detalhamento de assinaturas</h2>
-    <div class="table-controls">
-      <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nome ou email..." oninput="filtrarTabela()">
-      <select class="filter-status" id="filterStatus" onchange="filtrarTabela()">
-        <option value="">Todos os status</option>
-        <option value="active">Ativa</option>
-        <option value="canceled">Cancelada</option>
-        <option value="started">Em renovação</option>
-        <option value="pastdue">Atrasada</option>
-        <option value="expired">Expirada</option>
-        <option value="inactive">Inativa</option>
-        <option value="trial">Trial</option>
-        <option value="renovada">Renovada no mês</option>
-      </select>
-    </div>
-  </div>
   <div id="tableContainer">
     <div class="empty-state">
       <div class="icon">📊</div>
@@ -556,6 +519,21 @@
 <div class="last-update" id="lastUpdate"></div>
 
 <script>
+// ─── Classificação de clube ────────────────────────────────────
+function detectarClube(s) {
+  const nome = (s.product?.name || s.subscription_name || '').toLowerCase();
+
+  if (/latam|m[eé]xico|chile/i.test(nome)) return 'latam';
+
+  if (/board\s*select|select/i.test(nome)) return 'bs';
+
+  if (/board\s*club|board club/i.test(nome)) return 'bc';
+
+  return 'other';
+}
+
+const CLUBE_LABEL = { bc: 'Board Club', bs: 'Board Select', latam: 'LATAM / México / Chile', other: 'Outros' };
+
 // ─── Estado ────────────────────────────────────────────────────
 let empresas = [];
 let empresaAtiva = 'consolidado';
@@ -563,8 +541,6 @@ let assinaturasFiltradas = [];
 let paginaAtual = 1;
 const POR_PAGINA = 30;
 let mesIni = '', mesFim = '';
-
-// A URL base aponta para o proxy Vercel (mesmo domínio = sem CORS)
 const API_BASE = '/api/guru';
 
 // ─── Init ──────────────────────────────────────────────────────
@@ -575,97 +551,74 @@ const API_BASE = '/api/guru';
 
   try {
     const saved = localStorage.getItem('guru_empresas');
-    if (saved) {
-      empresas = JSON.parse(saved).map(e => ({...e, dados: [], kpis: null}));
-    }
+    if (saved) empresas = JSON.parse(saved).map(e => ({...e, dados:[], kpis:null}));
   } catch(e) {}
 
   if (!empresas.length) {
-    novaEmpresa('Empresa 1');
-    novaEmpresa('Empresa 2');
-    novaEmpresa('Empresa 3');
+    ['Empresa 1','Empresa 2','Empresa 3'].forEach(n => novaEmpresa(n));
   } else {
     renderEmpresas();
   }
 })();
 
 // ─── Empresas ──────────────────────────────────────────────────
-function novaEmpresa(nome = '') {
-  const id = 'emp_' + Date.now() + Math.random().toString(36).slice(2,5);
-  empresas.push({ id, nome, token: '', dados: [], kpis: null });
-  renderEmpresas();
-  salvarEmpresas();
+function novaEmpresa(nome='') {
+  empresas.push({ id:'emp_'+Date.now()+Math.random().toString(36).slice(2,5), nome, token:'', dados:[], kpis:null });
+  renderEmpresas(); salvarEmpresas();
 }
-
 function adicionarEmpresa() { novaEmpresa(); }
-
 function removerEmpresa(id) {
   empresas = empresas.filter(e => e.id !== id);
   if (empresaAtiva === id) empresaAtiva = 'consolidado';
-  renderEmpresas();
-  salvarEmpresas();
-  renderAbasEmpresas();
-  atualizarCards();
-  renderTabela();
+  renderEmpresas(); salvarEmpresas(); renderAbas(); atualizarCards(); renderClubCards(); renderTabela();
 }
-
 function salvarEmpresas() {
-  try {
-    localStorage.setItem('guru_empresas', JSON.stringify(
-      empresas.map(e => ({ id: e.id, nome: e.nome, token: e.token }))
-    ));
-  } catch(e) {}
+  try { localStorage.setItem('guru_empresas', JSON.stringify(empresas.map(e=>({id:e.id,nome:e.nome,token:e.token})))); } catch(e) {}
 }
-
 function renderEmpresas() {
   document.getElementById('empresasList').innerHTML = empresas.map(e => `
-    <div class="empresa-row" id="row_${e.id}">
-      <div class="empresa-status-dot ${e.kpis ? 'ok' : ''}" id="dot_${e.id}"></div>
+    <div class="empresa-row">
+      <div class="empresa-status-dot ${e.kpis?'ok':''}" id="dot_${e.id}"></div>
       <input class="empresa-nome-input" value="${e.nome}" placeholder="Nome da empresa"
         oninput="atualizarCampo('${e.id}','nome',this.value)">
       <input class="empresa-token-input" type="password" value="${e.token}"
         placeholder="Bearer Token da Guru..." autocomplete="off"
         oninput="atualizarCampo('${e.id}','token',this.value)">
-      <button class="btn-remove-empresa" onclick="removerEmpresa('${e.id}')" title="Remover">✕</button>
-    </div>
-  `).join('');
+      <button class="btn-remove-empresa" onclick="removerEmpresa('${e.id}')">✕</button>
+    </div>`).join('');
 }
-
 function atualizarCampo(id, campo, valor) {
-  const e = empresas.find(e => e.id === id);
-  if (e) { e[campo] = valor; salvarEmpresas(); }
+  const e = empresas.find(e=>e.id===id);
+  if (e) { e[campo]=valor; salvarEmpresas(); }
 }
-
 function setDot(id, estado) {
-  const dot = document.getElementById(`dot_${id}`);
-  if (dot) dot.className = `empresa-status-dot ${estado}`;
+  const d = document.getElementById(`dot_${id}`);
+  if (d) d.className = `empresa-status-dot ${estado}`;
 }
 
 // ─── Busca ─────────────────────────────────────────────────────
 async function buscarDados() {
   const month = document.getElementById('monthInput').value;
-  const productId = document.getElementById('productInput').value.trim();
   const validas = empresas.filter(e => e.token.trim());
-
   if (!validas.length) return mostrarErro('Informe ao menos um Bearer Token.');
   if (!month) return mostrarErro('Selecione o mês de referência.');
 
-  limparErro();
-  setLoading(true);
+  limparErro(); setLoading(true);
 
   const [ano, mes] = month.split('-').map(Number);
   mesIni = `${ano}-${String(mes).padStart(2,'0')}-01`;
-  const ultimoDia = new Date(ano, mes, 0).getDate();
-  mesFim = `${ano}-${String(mes).padStart(2,'0')}-${ultimoDia}`;
+  mesFim = `${ano}-${String(mes).padStart(2,'0')}-${new Date(ano,mes,0).getDate()}`;
 
-  empresas.forEach(e => { e.dados = []; e.kpis = null; });
+  empresas.forEach(e => { e.dados=[]; e.kpis=null; });
   renderEmpresas();
 
   let totalRegs = 0;
   for (const emp of validas) {
     setDot(emp.id, 'loading');
     try {
-      emp.dados = await buscarTodas(emp.token.trim(), productId);
+      emp.dados = await buscarTodas(emp.token.trim());
+      // Enriquecer com clube
+      emp.dados.forEach(s => { s._clube = detectarClube(s); });
       emp.kpis = calcularKPIs(emp.dados);
       totalRegs += emp.dados.length;
       setDot(emp.id, 'ok');
@@ -675,43 +628,34 @@ async function buscarDados() {
     }
   }
 
-  renderAbasEmpresas();
-  atualizarCards();
-  assinaturasFiltradas = [];
-  renderTabela();
+  renderAbas(); atualizarCards(); renderClubCards();
+  assinaturasFiltradas = []; renderTabela();
   document.getElementById('lastUpdate').textContent =
-    `Última atualização: ${new Date().toLocaleString('pt-BR')} · ${totalRegs} registros carregados`;
+    `Última atualização: ${new Date().toLocaleString('pt-BR')} · ${totalRegs} registros`;
   setLoading(false);
 }
 
-async function buscarTodas(token, productId) {
+async function buscarTodas(token) {
   const status = ['active','canceled','started','pastdue','expired','inactive','trial'];
   let todas = [];
-  for (const s of status) {
-    todas = todas.concat(await buscarPorStatus(token, s, productId));
-  }
+  for (const s of status) todas = todas.concat(await buscarPorStatus(token, s));
   return todas;
 }
 
-async function buscarPorStatus(token, status, productId) {
-  let cursor = null, resultado = [], pagina = 0;
+async function buscarPorStatus(token, status) {
+  let cursor=null, resultado=[], pagina=0;
   while (true) {
     pagina++;
     const params = new URLSearchParams();
     params.set('subscription_status[]', status);
-    if (productId) params.set('product_id', productId);
     if (cursor) params.set('cursor', cursor);
-
-    // Chama o proxy Vercel — sem CORS
-    const resp = await fetch(`${API_BASE}?${params.toString()}`, {
+    const resp = await fetch(`${API_BASE}?${params}`, {
       headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
     });
-
     if (!resp.ok) {
-      if (resp.status === 401) throw new Error('Token inválido (HTTP 401).');
+      if (resp.status===401) throw new Error('Token inválido (HTTP 401).');
       throw new Error(`HTTP ${resp.status} buscando "${status}".`);
     }
-
     const json = await resp.json();
     resultado = resultado.concat(json.data || []);
     if (!json.has_more_pages || !json.next_cursor) break;
@@ -723,180 +667,249 @@ async function buscarPorStatus(token, status, productId) {
 
 // ─── KPIs ──────────────────────────────────────────────────────
 function calcularKPIs(dados) {
-  const tsIni = new Date(mesIni).getTime() / 1000;
-  const tsFim = new Date(mesFim + 'T23:59:59').getTime() / 1000;
+  const tsIni = new Date(mesIni).getTime()/1000;
+  const tsFim = new Date(mesFim+'T23:59:59').getTime()/1000;
 
-  const uniqueContacts = new Set(dados.map(s => s.contact?.id || s.contact?.email || s.id));
-  const ativas = dados.filter(s => s.last_status === 'active').length;
+  const unique = new Set(dados.map(s => s.contact?.id || s.contact?.email || s.id));
+  const ativas = dados.filter(s => s.last_status==='active').length;
   const canceladas = dados.filter(s => {
-    if (s.last_status !== 'canceled') return false;
-    const cat = typeof s.cancelled_at === 'number' ? s.cancelled_at : (s.cancelled_at ? new Date(s.cancelled_at).getTime()/1000 : null);
-    return cat && cat >= tsIni && cat <= tsFim;
+    if (s.last_status!=='canceled') return false;
+    const cat = typeof s.cancelled_at==='number' ? s.cancelled_at : (s.cancelled_at ? new Date(s.cancelled_at).getTime()/1000 : null);
+    return cat && cat>=tsIni && cat<=tsFim;
   }).length;
-  const emRenovacao = dados.filter(s => s.last_status === 'started').length;
-  const renovadasIds = new Set(
-    dados.filter(s =>
-      s.last_status === 'active' &&
-      (s.charged_times || 0) >= 2 &&
-      s.last_status_at >= tsIni && s.last_status_at <= tsFim
-    ).map(s => s.id)
-  );
+  const emRenovacao = dados.filter(s => s.last_status==='started').length;
+  const renovadasIds = new Set(dados.filter(s =>
+    s.last_status==='active' && (s.charged_times||0)>=2 &&
+    s.last_status_at>=tsIni && s.last_status_at<=tsFim
+  ).map(s => s.id));
   dados.forEach(s => { s._renovada = renovadasIds.has(s.id); });
 
-  return { total: uniqueContacts.size, ativas, canceladas, emRenovacao, renovadas: renovadasIds.size };
+  // Por clube
+  const clubes = { bc:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0},
+                   bs:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0},
+                   latam:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0},
+                   other:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0} };
+  dados.forEach(s => {
+    const c = s._clube || 'other';
+    clubes[c].total++;
+    if (s.last_status==='active') clubes[c].ativas++;
+    if (s.last_status==='canceled') {
+      const cat = typeof s.cancelled_at==='number' ? s.cancelled_at : (s.cancelled_at ? new Date(s.cancelled_at).getTime()/1000 : null);
+      if (cat && cat>=tsIni && cat<=tsFim) clubes[c].canceladas++;
+    }
+    if (s.last_status==='started') clubes[c].emRenovacao++;
+    if (s._renovada) clubes[c].renovadas++;
+  });
+
+  return { total:unique.size, ativas, canceladas, emRenovacao, renovadas:renovadasIds.size, clubes };
 }
 
 // ─── Abas ──────────────────────────────────────────────────────
-function renderAbasEmpresas() {
-  const comDados = empresas.filter(e => e.kpis);
-  if (!comDados.length) return;
-
-  let tabsEl = document.getElementById('empresaTabs');
-  if (!tabsEl) {
-    tabsEl = document.createElement('div');
-    tabsEl.id = 'empresaTabs';
-    tabsEl.className = 'empresa-tabs';
-    document.querySelector('.cards').before(tabsEl);
-  }
-
-  tabsEl.innerHTML = `
-    <button class="empresa-tab consolidado ${empresaAtiva==='consolidado'?'active':''}"
-      onclick="selecionarEmpresa('consolidado')">🏢 Consolidado</button>
-    ${comDados.map(e => `
-      <button class="empresa-tab ${empresaAtiva===e.id?'active':''}" onclick="selecionarEmpresa('${e.id}')">
-        ${e.nome || 'Sem nome'}
-      </button>
-    `).join('')}
+function renderAbas() {
+  const comDados = empresas.filter(e=>e.kpis);
+  const el = document.getElementById('empresaTabs');
+  if (!comDados.length) { el.style.display='none'; return; }
+  el.style.display='flex';
+  el.innerHTML = `
+    <button class="tab-btn consolidado ${empresaAtiva==='consolidado'?'active':''}" onclick="selecionarEmpresa('consolidado')">🏢 Consolidado</button>
+    ${comDados.map(e=>`<button class="tab-btn ${empresaAtiva===e.id?'active':''}" onclick="selecionarEmpresa('${e.id}')">${e.nome||'Sem nome'}</button>`).join('')}
   `;
 }
 
 function selecionarEmpresa(id) {
-  empresaAtiva = id;
-  renderAbasEmpresas();
-  atualizarCards();
-  assinaturasFiltradas = [];
-  paginaAtual = 1;
-  document.getElementById('searchInput').value = '';
-  document.getElementById('filterStatus').value = '';
+  empresaAtiva=id; renderAbas(); atualizarCards(); renderClubCards();
+  assinaturasFiltradas=[]; paginaAtual=1;
+  document.getElementById('searchInput').value='';
+  document.getElementById('filterStatus').value='';
+  document.getElementById('filterClub').value='';
+  document.getElementById('filterRenewalDate').value='';
   renderTabela();
 }
 
-// ─── Cards ─────────────────────────────────────────────────────
-function atualizarCards() {
-  const comDados = empresas.filter(e => e.kpis);
-  if (!comDados.length) return;
-
-  let kpis;
-  if (empresaAtiva === 'consolidado') {
-    kpis = comDados.reduce((acc, e) => ({
-      total: acc.total + e.kpis.total,
-      ativas: acc.ativas + e.kpis.ativas,
-      canceladas: acc.canceladas + e.kpis.canceladas,
-      emRenovacao: acc.emRenovacao + e.kpis.emRenovacao,
-      renovadas: acc.renovadas + e.kpis.renovadas,
-    }), { total:0, ativas:0, canceladas:0, emRenovacao:0, renovadas:0 });
-  } else {
-    kpis = empresas.find(e => e.id === empresaAtiva)?.kpis ||
-      { total:0, ativas:0, canceladas:0, emRenovacao:0, renovadas:0 };
+// ─── Cards KPI ─────────────────────────────────────────────────
+function getKpisAtivos() {
+  const comDados = empresas.filter(e=>e.kpis);
+  if (!comDados.length) return null;
+  if (empresaAtiva==='consolidado') {
+    return comDados.reduce((acc,e)=>({
+      total:acc.total+e.kpis.total, ativas:acc.ativas+e.kpis.ativas,
+      canceladas:acc.canceladas+e.kpis.canceladas,
+      emRenovacao:acc.emRenovacao+e.kpis.emRenovacao,
+      renovadas:acc.renovadas+e.kpis.renovadas,
+      clubes: mergeClubs(acc.clubes, e.kpis.clubes)
+    }), { total:0,ativas:0,canceladas:0,emRenovacao:0,renovadas:0,
+          clubes:{bc:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0},
+                  bs:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0},
+                  latam:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0},
+                  other:{total:0,ativas:0,canceladas:0,renovadas:0,emRenovacao:0}} });
   }
+  return empresas.find(e=>e.id===empresaAtiva)?.kpis || null;
+}
 
-  document.getElementById('valTotal').textContent = kpis.total.toLocaleString('pt-BR');
-  document.getElementById('valActive').textContent = kpis.ativas.toLocaleString('pt-BR');
-  document.getElementById('valCanceled').textContent = kpis.canceladas.toLocaleString('pt-BR');
-  document.getElementById('valStarted').textContent = kpis.emRenovacao.toLocaleString('pt-BR');
-  document.getElementById('valRenewed').textContent = kpis.renovadas.toLocaleString('pt-BR');
+function mergeClubs(a, b) {
+  const r = {};
+  ['bc','bs','latam','other'].forEach(k => {
+    r[k] = { total:(a[k]?.total||0)+(b[k]?.total||0),
+              ativas:(a[k]?.ativas||0)+(b[k]?.ativas||0),
+              canceladas:(a[k]?.canceladas||0)+(b[k]?.canceladas||0),
+              renovadas:(a[k]?.renovadas||0)+(b[k]?.renovadas||0),
+              emRenovacao:(a[k]?.emRenovacao||0)+(b[k]?.emRenovacao||0) };
+  });
+  return r;
+}
+
+function atualizarCards() {
+  const k = getKpisAtivos(); if (!k) return;
+  document.getElementById('valTotal').textContent = k.total.toLocaleString('pt-BR');
+  document.getElementById('valActive').textContent = k.ativas.toLocaleString('pt-BR');
+  document.getElementById('valCanceled').textContent = k.canceladas.toLocaleString('pt-BR');
+  document.getElementById('valStarted').textContent = k.emRenovacao.toLocaleString('pt-BR');
+  document.getElementById('valRenewed').textContent = k.renovadas.toLocaleString('pt-BR');
+}
+
+function renderClubCards() {
+  const k = getKpisAtivos(); if (!k) return;
+  document.getElementById('clubCards').innerHTML = ['bc','bs','latam','other'].map(c => `
+    <div class="club-card">
+      <div class="club-card-header">
+        <div class="club-dot ${c}"></div>
+        <span class="club-name ${c}">${CLUBE_LABEL[c]}</span>
+      </div>
+      <div class="club-metrics">
+        <div class="club-metric">
+          <span class="club-metric-label">Total</span>
+          <span class="club-metric-val">${(k.clubes[c]?.total||0).toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="club-metric">
+          <span class="club-metric-label">Ativas</span>
+          <span class="club-metric-val green">${(k.clubes[c]?.ativas||0).toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="club-metric">
+          <span class="club-metric-label">Em renovação</span>
+          <span class="club-metric-val yellow">${(k.clubes[c]?.emRenovacao||0).toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="club-metric">
+          <span class="club-metric-label">Renovadas no mês</span>
+          <span class="club-metric-val blue">${(k.clubes[c]?.renovadas||0).toLocaleString('pt-BR')}</span>
+        </div>
+        <div class="club-metric">
+          <span class="club-metric-label">Canceladas no mês</span>
+          <span class="club-metric-val red">${(k.clubes[c]?.canceladas||0).toLocaleString('pt-BR')}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ─── Tabela ────────────────────────────────────────────────────
 function getDadosAtivos() {
-  if (empresaAtiva === 'consolidado')
-    return empresas.flatMap(e => e.dados.map(s => ({...s, _empresa: e.nome || e.id})));
-  const emp = empresas.find(e => e.id === empresaAtiva);
-  return (emp?.dados || []).map(s => ({...s, _empresa: emp.nome}));
+  if (empresaAtiva==='consolidado')
+    return empresas.flatMap(e=>e.dados.map(s=>({...s,_empresa:e.nome||e.id})));
+  const emp = empresas.find(e=>e.id===empresaAtiva);
+  return (emp?.dados||[]).map(s=>({...s,_empresa:emp.nome}));
 }
 
 function filtrarTabela() {
   const busca = document.getElementById('searchInput').value.toLowerCase();
   const statusFiltro = document.getElementById('filterStatus').value;
+  const clubFiltro = document.getElementById('filterClub').value;
+  const dateFiltro = document.getElementById('filterRenewalDate').value; // YYYY-MM-DD
+
   assinaturasFiltradas = getDadosAtivos().filter(s => {
     const matchBusca = !busca ||
       (s.contact?.name||'').toLowerCase().includes(busca) ||
       (s.contact?.email||'').toLowerCase().includes(busca);
     const matchStatus = !statusFiltro ? true :
-      statusFiltro === 'renovada' ? s._renovada : s.last_status === statusFiltro;
-    return matchBusca && matchStatus;
+      statusFiltro==='renovada' ? s._renovada : s.last_status===statusFiltro;
+    const matchClub = !clubFiltro || s._clube===clubFiltro;
+    const matchDate = !dateFiltro ? true :
+      (s.next_cycle_at && s.next_cycle_at.slice(0,10)===dateFiltro);
+    return matchBusca && matchStatus && matchClub && matchDate;
   });
-  paginaAtual = 1;
-  renderTabela();
+  paginaAtual=1; renderTabela();
+}
+
+function limparFiltros() {
+  document.getElementById('searchInput').value='';
+  document.getElementById('filterStatus').value='';
+  document.getElementById('filterClub').value='';
+  document.getElementById('filterRenewalDate').value='';
+  assinaturasFiltradas=[]; paginaAtual=1; renderTabela();
 }
 
 function renderTabela() {
   const dados = getDadosAtivos();
   if (!dados.length) return;
-  if (!assinaturasFiltradas.length) assinaturasFiltradas = [...dados];
+  if (!assinaturasFiltradas.length) assinaturasFiltradas=[...dados];
 
   const total = assinaturasFiltradas.length;
-  const inicio = (paginaAtual - 1) * POR_PAGINA;
-  const fim = Math.min(inicio + POR_PAGINA, total);
+  const inicio = (paginaAtual-1)*POR_PAGINA;
+  const fim = Math.min(inicio+POR_PAGINA, total);
   const pagina = assinaturasFiltradas.slice(inicio, fim);
-  const multiEmpresa = empresaAtiva === 'consolidado' && empresas.filter(e => e.kpis).length > 1;
+  const multiEmpresa = empresaAtiva==='consolidado' && empresas.filter(e=>e.kpis).length>1;
+  const hoje = new Date().toISOString().slice(0,10);
 
   let html = `<table><thead><tr>
     <th>Contato</th><th>Email</th>
-    ${multiEmpresa ? '<th>Empresa</th>' : ''}
-    <th>Produto</th><th>Status</th><th>Ciclos</th><th>Próx. ciclo</th><th>Último status</th>
+    ${multiEmpresa?'<th>Empresa</th>':''}
+    <th>Clube</th><th>Produto</th><th>Status</th>
+    <th>Ciclos</th><th>Próx. renovação ↕</th>
   </tr></thead><tbody>`;
 
   pagina.forEach(s => {
-    const badgeClass = s._renovada ? 'renovada' : (s.last_status || 'inactive');
+    const badgeClass = s._renovada ? 'renovada' : (s.last_status||'inactive');
     const badgeLabel = s._renovada ? 'Renovada' : traduzStatus(s.last_status);
+    const clube = s._clube || 'other';
+    const proximaRenovacao = s.next_cycle_at ? s.next_cycle_at.slice(0,10) : null;
+    let renovClass = 'renewal-ok';
+    if (proximaRenovacao) {
+      const diff = (new Date(proximaRenovacao) - new Date(hoje)) / 86400000;
+      if (diff <= 0) renovClass = 'renewal-today';
+      else if (diff <= 7) renovClass = 'renewal-soon';
+    }
+
     html += `<tr>
-      <td>${s.contact?.name || '—'}</td>
-      <td class="muted-cell">${s.contact?.email || '—'}</td>
-      ${multiEmpresa ? `<td class="muted-cell">${s._empresa}</td>` : ''}
-      <td class="muted-cell">${s.product?.name || s.subscription_name || '—'}</td>
+      <td>${s.contact?.name||'—'}</td>
+      <td class="muted-cell">${s.contact?.email||'—'}</td>
+      ${multiEmpresa?`<td class="muted-cell">${s._empresa}</td>`:''}
+      <td><span class="club-badge ${clube}"><span class="dot"></span>${CLUBE_LABEL[clube]}</span></td>
+      <td class="muted-cell" style="font-size:12px;">${s.product?.name||s.subscription_name||'—'}</td>
       <td><span class="status-badge ${badgeClass}"><span class="dot"></span>${badgeLabel}</span></td>
-      <td class="mono">${s.charged_times ?? '—'}</td>
-      <td class="mono muted-cell">${s.next_cycle_at ? s.next_cycle_at.slice(0,10) : '—'}</td>
-      <td class="mono muted-cell">${s.last_status_at ? formatTs(s.last_status_at) : '—'}</td>
+      <td class="mono">${s.charged_times??'—'}</td>
+      <td class="mono ${renovClass}">${proximaRenovacao ? formatDate(proximaRenovacao) : '—'}</td>
     </tr>`;
   });
 
   html += '</tbody></table>';
   document.getElementById('tableContainer').innerHTML = html;
-
-  const totalPag = Math.ceil(total / POR_PAGINA);
-  document.getElementById('pagination').style.display = 'flex';
-  document.getElementById('paginationInfo').textContent = `Exibindo ${inicio+1}–${fim} de ${total}`;
-  document.getElementById('btnPrev').disabled = paginaAtual === 1;
-  document.getElementById('btnNext').disabled = paginaAtual >= totalPag;
+  document.getElementById('pagination').style.display='flex';
+  document.getElementById('paginationInfo').textContent=`Exibindo ${inicio+1}–${fim} de ${total}`;
+  document.getElementById('btnPrev').disabled = paginaAtual===1;
+  document.getElementById('btnNext').disabled = paginaAtual>=Math.ceil(total/POR_PAGINA);
 }
 
 function irPagina(delta) {
-  paginaAtual += delta;
-  renderTabela();
-  window.scrollTo({ top: document.querySelector('.table-section').offsetTop - 20, behavior: 'smooth' });
+  paginaAtual+=delta; renderTabela();
+  window.scrollTo({ top: document.querySelector('.table-filters').offsetTop-20, behavior:'smooth' });
 }
 
 // ─── Helpers ───────────────────────────────────────────────────
 function traduzStatus(s) {
-  return { active:'Ativa', canceled:'Cancelada', started:'Em renovação',
-    expired:'Expirada', inactive:'Inativa', pastdue:'Atrasada', trial:'Trial' }[s] || s;
+  return {active:'Ativa',canceled:'Cancelada',started:'Em renovação',
+    expired:'Expirada',inactive:'Inativa',pastdue:'Atrasada',trial:'Trial'}[s]||s;
 }
-function formatTs(ts) { return new Date(ts*1000).toLocaleDateString('pt-BR'); }
+function formatDate(d) {
+  const [a,m,dia] = d.split('-');
+  return `${dia}/${m}/${a}`;
+}
 function setLoading(on) {
-  const btn = document.getElementById('btnBuscar');
-  btn.disabled = on;
-  btn.classList.toggle('loading', on);
+  const btn=document.getElementById('btnBuscar');
+  btn.disabled=on; btn.classList.toggle('loading',on);
 }
 function mostrarErro(msg) {
-  const el = document.getElementById('errorMsg');
-  el.textContent = msg; el.style.display = 'block';
+  const el=document.getElementById('errorMsg'); el.textContent=msg; el.style.display='block';
 }
-function limparErro() {
-  const el = document.getElementById('errorMsg');
-  el.style.display = 'none';
-}
+function limparErro() { document.getElementById('errorMsg').style.display='none'; }
 </script>
 </body>
 </html>
