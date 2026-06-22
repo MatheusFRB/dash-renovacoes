@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dash de Renovações — Board Academy</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161921;
+    --surface2: #1e2230;
+    --border: #2a2f3d;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --active: #22c55e;
+    --active-dim: rgba(34,197,94,0.12);
+    --canceled: #ef4444;
+    --canceled-dim: rgba(239,68,68,0.12);
+    --renewal: #f59e0b;
+    --renewal-dim: rgba(245,158,11,0.12);
+    --renewed: #3b82f6;
+    --renewed-dim: rgba(59,130,246,0.12);
+    --total: #a78bfa;
+    --total-dim: rgba(167,139,250,0.12);
+    --accent: #6366f1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    padding: 32px 24px;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .header-left h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: #fff; }
+  .header-left p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  /* FILTROS */
+  .filters {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .filter-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .filter-group label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .filter-group input,
+  .filter-group select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    outline: none;
+    min-width: 160px;
+    transition: border-color 0.15s;
+  }
+
+  .filter-group input:focus,
+  .filter-group select:focus { border-color: var(--accent); }
+
+  .btn-buscar {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 24px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-buscar:hover { opacity: 0.85; }
+  .btn-buscar:active { transform: scale(0.98); }
+  .btn-buscar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: none;
+  }
+  .loading .spinner { display: block; }
+  .loading .btn-text { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* EMPRESAS */
+  .empresas-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+
+  .empresas-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .empresas-title { font-size: 13px; font-weight: 600; color: #fff; }
+
+  .btn-add-empresa {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn-add-empresa:hover { border-color: var(--accent); background: rgba(99,102,241,0.08); }
+
+  #empresasList { display: flex; flex-direction: column; gap: 10px; }
+
+  .empresa-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    flex-wrap: wrap;
+  }
+
+  .empresa-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .empresa-status-dot.ok { background: var(--active); }
+  .empresa-status-dot.error { background: var(--canceled); }
+  .empresa-status-dot.loading { background: var(--renewal); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .empresa-nome-input {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    min-width: 140px;
+    max-width: 200px;
+  }
+
+  .empresa-token-input {
+    background: transparent;
+    border: none;
+    border-left: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    outline: none;
+    flex: 1;
+    min-width: 200px;
+    padding-left: 12px;
+  }
+  .empresa-token-input::placeholder { color: var(--border); }
+
+  .btn-remove-empresa {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 2px;
+    line-height: 1;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-remove-empresa:hover { color: var(--canceled); }
+
+  /* ABAS */
+  .empresa-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .empresa-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .empresa-tab:hover { border-color: var(--accent); color: var(--text); }
+  .empresa-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .empresa-tab.consolidado { background: var(--total-dim); border-color: var(--total); color: var(--total); }
+  .empresa-tab.consolidado.active { background: var(--total); color: #fff; }
+
+  /* CARDS */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 12px 12px 0 0;
+  }
+  .card.total::before { background: var(--total); }
+  .card.active::before { background: var(--active); }
+  .card.canceled::before { background: var(--canceled); }
+  .card.renewal::before { background: var(--renewal); }
+  .card.renewed::before { background: var(--renewed); }
+
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+  .card.total .card-icon { background: var(--total-dim); }
+  .card.active .card-icon { background: var(--active-dim); }
+  .card.canceled .card-icon { background: var(--canceled-dim); }
+  .card.renewal .card-icon { background: var(--renewal-dim); }
+  .card.renewed .card-icon { background: var(--renewed-dim); }
+
+  .card-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-size: 36px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -1px;
+    color: #fff;
+    line-height: 1;
+  }
+  .card.total .card-value { color: var(--total); }
+  .card.active .card-value { color: var(--active); }
+  .card.canceled .card-value { color: var(--canceled); }
+  .card.renewal .card-value { color: var(--renewal); }
+  .card.renewed .card-value { color: var(--renewed); }
+
+  .card-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+  /* TABELA */
+  .table-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .table-header h2 { font-size: 14px; font-weight: 600; color: #fff; }
+
+  .table-controls { display: flex; gap: 8px; align-items: center; }
+
+  .filter-status, .search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    outline: none;
+  }
+  .search-input { width: 180px; }
+  .search-input::placeholder { color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    padding: 10px 20px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  tbody td { padding: 12px 20px; font-size: 13px; color: var(--text); vertical-align: middle; }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .status-badge.active { background: var(--active-dim); color: var(--active); }
+  .status-badge.canceled { background: var(--canceled-dim); color: var(--canceled); }
+  .status-badge.started { background: var(--renewal-dim); color: var(--renewal); }
+  .status-badge.expired { background: rgba(156,163,175,0.12); color: #9ca3af; }
+  .status-badge.inactive { background: rgba(156,163,175,0.12); color: #9ca3af; }
+  .status-badge.pastdue { background: rgba(249,115,22,0.12); color: #f97316; }
+  .status-badge.trial { background: rgba(99,102,241,0.12); color: #818cf8; }
+  .status-badge.renovada { background: var(--renewed-dim); color: var(--renewed); }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .muted-cell { color: var(--muted); }
+
+  /* PAGINAÇÃO */
+  .pagination {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pagination-info { font-size: 12px; color: var(--muted); }
+  .pagination-btns { display: flex; gap: 6px; }
+
+  .btn-page {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .btn-page:hover { border-color: var(--accent); }
+  .btn-page:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state .icon { font-size: 32px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+  .empty-state small { font-size: 12px; display: block; margin-top: 4px; }
+
+  .error-msg {
+    background: var(--canceled-dim);
+    border: 1px solid var(--canceled);
+    color: var(--canceled);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    display: none;
+  }
+
+  .last-update { font-size: 11px; color: var(--muted); text-align: right; margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="tag">Board Academy</div>
+    <h1>Dash de Renovações</h1>
+    <p>Indicadores de assinatura via API Digital Manager Guru</p>
+  </div>
+</header>
+
+<div class="error-msg" id="errorMsg"></div>
+
+<div class="filters">
+  <div class="filter-group" style="flex:1; min-width:200px;">
+    <label>Mês de referência</label>
+    <input type="month" id="monthInput">
+  </div>
+  <div class="filter-group">
+    <label>Produto (opcional)</label>
+    <input type="text" id="productInput" placeholder="UUID do produto" style="min-width:200px;">
+  </div>
+  <button class="btn-buscar" id="btnBuscar" onclick="buscarDados()">
+    <div class="spinner"></div>
+    <span class="btn-text">Buscar dados</span>
+  </button>
+</div>
+
+<div class="empresas-section">
+  <div class="empresas-header">
+    <span class="empresas-title">Empresas conectadas</span>
+    <button class="btn-add-empresa" onclick="adicionarEmpresa()">+ Adicionar empresa</button>
+  </div>
+  <div id="empresasList"></div>
+</div>
+
+<div class="cards">
+  <div class="card total">
+    <div class="card-icon">👥</div>
+    <div class="card-label">Assinantes únicos</div>
+    <div class="card-value" id="valTotal">—</div>
+    <div class="card-sub">contatos distintos (todos status)</div>
+  </div>
+  <div class="card active">
+    <div class="card-icon">✅</div>
+    <div class="card-label">Ativas</div>
+    <div class="card-value" id="valActive">—</div>
+    <div class="card-sub">assinaturas com status active</div>
+  </div>
+  <div class="card canceled">
+    <div class="card-icon">✕</div>
+    <div class="card-label">Canceladas no mês</div>
+    <div class="card-value" id="valCanceled">—</div>
+    <div class="card-sub">cancelled_at dentro do mês</div>
+  </div>
+  <div class="card renewal">
+    <div class="card-icon">🔄</div>
+    <div class="card-label">Em renovação</div>
+    <div class="card-value" id="valStarted">—</div>
+    <div class="card-sub">status started</div>
+  </div>
+  <div class="card renewed">
+    <div class="card-icon">🔁</div>
+    <div class="card-label">Renovadas no mês</div>
+    <div class="card-value" id="valRenewed">—</div>
+    <div class="card-sub">active + charged_times ≥ 2 + último status no mês</div>
+  </div>
+</div>
+
+<div class="table-section">
+  <div class="table-header">
+    <h2>Detalhamento de assinaturas</h2>
+    <div class="table-controls">
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nome ou email..." oninput="filtrarTabela()">
+      <select class="filter-status" id="filterStatus" onchange="filtrarTabela()">
+        <option value="">Todos os status</option>
+        <option value="active">Ativa</option>
+        <option value="canceled">Cancelada</option>
+        <option value="started">Em renovação</option>
+        <option value="pastdue">Atrasada</option>
+        <option value="expired">Expirada</option>
+        <option value="inactive">Inativa</option>
+        <option value="trial">Trial</option>
+        <option value="renovada">Renovada no mês</option>
+      </select>
+    </div>
+  </div>
+  <div id="tableContainer">
+    <div class="empty-state">
+      <div class="icon">📊</div>
+      <p>Nenhum dado carregado</p>
+      <small>Configure as empresas, selecione o mês e clique em Buscar dados</small>
+    </div>
+  </div>
+  <div class="pagination" id="pagination" style="display:none">
+    <span class="pagination-info" id="paginationInfo"></span>
+    <div class="pagination-btns">
+      <button class="btn-page" id="btnPrev" onclick="irPagina(-1)">← Anterior</button>
+      <button class="btn-page" id="btnNext" onclick="irPagina(1)">Próxima →</button>
+    </div>
+  </div>
+</div>
+
+<div class="last-update" id="lastUpdate"></div>
+
+<script>
+// ─── Estado ────────────────────────────────────────────────────
+let empresas = [];
+let empresaAtiva = 'consolidado';
+let assinaturasFiltradas = [];
+let paginaAtual = 1;
+const POR_PAGINA = 30;
+let mesIni = '', mesFim = '';
+
+// A URL base aponta para o proxy Vercel (mesmo domínio = sem CORS)
+const API_BASE = '/api/guru';
+
+// ─── Init ──────────────────────────────────────────────────────
+(function init() {
+  const hoje = new Date();
+  document.getElementById('monthInput').value =
+    `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
+
+  try {
+    const saved = localStorage.getItem('guru_empresas');
+    if (saved) {
+      empresas = JSON.parse(saved).map(e => ({...e, dados: [], kpis: null}));
+    }
+  } catch(e) {}
+
+  if (!empresas.length) {
+    novaEmpresa('Empresa 1');
+    novaEmpresa('Empresa 2');
+    novaEmpresa('Empresa 3');
+  } else {
+    renderEmpresas();
+  }
+})();
+
+// ─── Empresas ──────────────────────────────────────────────────
+function novaEmpresa(nome = '') {
+  const id = 'emp_' + Date.now() + Math.random().toString(36).slice(2,5);
+  empresas.push({ id, nome, token: '', dados: [], kpis: null });
+  renderEmpresas();
+  salvarEmpresas();
+}
+
+function adicionarEmpresa() { novaEmpresa(); }
+
+function removerEmpresa(id) {
+  empresas = empresas.filter(e => e.id !== id);
+  if (empresaAtiva === id) empresaAtiva = 'consolidado';
+  renderEmpresas();
+  salvarEmpresas();
+  renderAbasEmpresas();
+  atualizarCards();
+  renderTabela();
+}
+
+function salvarEmpresas() {
+  try {
+    localStorage.setItem('guru_empresas', JSON.stringify(
+      empresas.map(e => ({ id: e.id, nome: e.nome, token: e.token }))
+    ));
+  } catch(e) {}
+}
+
+function renderEmpresas() {
+  document.getElementById('empresasList').innerHTML = empresas.map(e => `
+    <div class="empresa-row" id="row_${e.id}">
+      <div class="empresa-status-dot ${e.kpis ? 'ok' : ''}" id="dot_${e.id}"></div>
+      <input class="empresa-nome-input" value="${e.nome}" placeholder="Nome da empresa"
+        oninput="atualizarCampo('${e.id}','nome',this.value)">
+      <input class="empresa-token-input" type="password" value="${e.token}"
+        placeholder="Bearer Token da Guru..." autocomplete="off"
+        oninput="atualizarCampo('${e.id}','token',this.value)">
+      <button class="btn-remove-empresa" onclick="removerEmpresa('${e.id}')" title="Remover">✕</button>
+    </div>
+  `).join('');
+}
+
+function atualizarCampo(id, campo, valor) {
+  const e = empresas.find(e => e.id === id);
+  if (e) { e[campo] = valor; salvarEmpresas(); }
+}
+
+function setDot(id, estado) {
+  const dot = document.getElementById(`dot_${id}`);
+  if (dot) dot.className = `empresa-status-dot ${estado}`;
+}
+
+// ─── Busca ─────────────────────────────────────────────────────
+async function buscarDados() {
+  const month = document.getElementById('monthInput').value;
+  const productId = document.getElementById('productInput').value.trim();
+  const validas = empresas.filter(e => e.token.trim());
+
+  if (!validas.length) return mostrarErro('Informe ao menos um Bearer Token.');
+  if (!month) return mostrarErro('Selecione o mês de referência.');
+
+  limparErro();
+  setLoading(true);
+
+  const [ano, mes] = month.split('-').map(Number);
+  mesIni = `${ano}-${String(mes).padStart(2,'0')}-01`;
+  const ultimoDia = new Date(ano, mes, 0).getDate();
+  mesFim = `${ano}-${String(mes).padStart(2,'0')}-${ultimoDia}`;
+
+  empresas.forEach(e => { e.dados = []; e.kpis = null; });
+  renderEmpresas();
+
+  let totalRegs = 0;
+  for (const emp of validas) {
+    setDot(emp.id, 'loading');
+    try {
+      emp.dados = await buscarTodas(emp.token.trim(), productId);
+      emp.kpis = calcularKPIs(emp.dados);
+      totalRegs += emp.dados.length;
+      setDot(emp.id, 'ok');
+    } catch(err) {
+      setDot(emp.id, 'error');
+      mostrarErro(`Erro em "${emp.nome}": ${err.message}`);
+    }
+  }
+
+  renderAbasEmpresas();
+  atualizarCards();
+  assinaturasFiltradas = [];
+  renderTabela();
+  document.getElementById('lastUpdate').textContent =
+    `Última atualização: ${new Date().toLocaleString('pt-BR')} · ${totalRegs} registros carregados`;
+  setLoading(false);
+}
+
+async function buscarTodas(token, productId) {
+  const status = ['active','canceled','started','pastdue','expired','inactive','trial'];
+  let todas = [];
+  for (const s of status) {
+    todas = todas.concat(await buscarPorStatus(token, s, productId));
+  }
+  return todas;
+}
+
+async function buscarPorStatus(token, status, productId) {
+  let cursor = null, resultado = [], pagina = 0;
+  while (true) {
+    pagina++;
+    const params = new URLSearchParams();
+    params.set('subscription_status[]', status);
+    if (productId) params.set('product_id', productId);
+    if (cursor) params.set('cursor', cursor);
+
+    // Chama o proxy Vercel — sem CORS
+    const resp = await fetch(`${API_BASE}?${params.toString()}`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
+    });
+
+    if (!resp.ok) {
+      if (resp.status === 401) throw new Error('Token inválido (HTTP 401).');
+      throw new Error(`HTTP ${resp.status} buscando "${status}".`);
+    }
+
+    const json = await resp.json();
+    resultado = resultado.concat(json.data || []);
+    if (!json.has_more_pages || !json.next_cursor) break;
+    cursor = json.next_cursor;
+    if (pagina >= 20) break;
+  }
+  return resultado;
+}
+
+// ─── KPIs ──────────────────────────────────────────────────────
+function calcularKPIs(dados) {
+  const tsIni = new Date(mesIni).getTime() / 1000;
+  const tsFim = new Date(mesFim + 'T23:59:59').getTime() / 1000;
+
+  const uniqueContacts = new Set(dados.map(s => s.contact?.id || s.contact?.email || s.id));
+  const ativas = dados.filter(s => s.last_status === 'active').length;
+  const canceladas = dados.filter(s => {
+    if (s.last_status !== 'canceled') return false;
+    const cat = typeof s.cancelled_at === 'number' ? s.cancelled_at : (s.cancelled_at ? new Date(s.cancelled_at).getTime()/1000 : null);
+    return cat && cat >= tsIni && cat <= tsFim;
+  }).length;
+  const emRenovacao = dados.filter(s => s.last_status === 'started').length;
+  const renovadasIds = new Set(
+    dados.filter(s =>
+      s.last_status === 'active' &&
+      (s.charged_times || 0) >= 2 &&
+      s.last_status_at >= tsIni && s.last_status_at <= tsFim
+    ).map(s => s.id)
+  );
+  dados.forEach(s => { s._renovada = renovadasIds.has(s.id); });
+
+  return { total: uniqueContacts.size, ativas, canceladas, emRenovacao, renovadas: renovadasIds.size };
+}
+
+// ─── Abas ──────────────────────────────────────────────────────
+function renderAbasEmpresas() {
+  const comDados = empresas.filter(e => e.kpis);
+  if (!comDados.length) return;
+
+  let tabsEl = document.getElementById('empresaTabs');
+  if (!tabsEl) {
+    tabsEl = document.createElement('div');
+    tabsEl.id = 'empresaTabs';
+    tabsEl.className = 'empresa-tabs';
+    document.querySelector('.cards').before(tabsEl);
+  }
+
+  tabsEl.innerHTML = `
+    <button class="empresa-tab consolidado ${empresaAtiva==='consolidado'?'active':''}"
+      onclick="selecionarEmpresa('consolidado')">🏢 Consolidado</button>
+    ${comDados.map(e => `
+      <button class="empresa-tab ${empresaAtiva===e.id?'active':''}" onclick="selecionarEmpresa('${e.id}')">
+        ${e.nome || 'Sem nome'}
+      </button>
+    `).join('')}
+  `;
+}
+
+function selecionarEmpresa(id) {
+  empresaAtiva = id;
+  renderAbasEmpresas();
+  atualizarCards();
+  assinaturasFiltradas = [];
+  paginaAtual = 1;
+  document.getElementById('searchInput').value = '';
+  document.getElementById('filterStatus').value = '';
+  renderTabela();
+}
+
+// ─── Cards ─────────────────────────────────────────────────────
+function atualizarCards() {
+  const comDados = empresas.filter(e => e.kpis);
+  if (!comDados.length) return;
+
+  let kpis;
+  if (empresaAtiva === 'consolidado') {
+    kpis = comDados.reduce((acc, e) => ({
+      total: acc.total + e.kpis.total,
+      ativas: acc.ativas + e.kpis.ativas,
+      canceladas: acc.canceladas + e.kpis.canceladas,
+      emRenovacao: acc.emRenovacao + e.kpis.emRenovacao,
+      renovadas: acc.renovadas + e.kpis.renovadas,
+    }), { total:0, ativas:0, canceladas:0, emRenovacao:0, renovadas:0 });
+  } else {
+    kpis = empresas.find(e => e.id === empresaAtiva)?.kpis ||
+      { total:0, ativas:0, canceladas:0, emRenovacao:0, renovadas:0 };
+  }
+
+  document.getElementById('valTotal').textContent = kpis.total.toLocaleString('pt-BR');
+  document.getElementById('valActive').textContent = kpis.ativas.toLocaleString('pt-BR');
+  document.getElementById('valCanceled').textContent = kpis.canceladas.toLocaleString('pt-BR');
+  document.getElementById('valStarted').textContent = kpis.emRenovacao.toLocaleString('pt-BR');
+  document.getElementById('valRenewed').textContent = kpis.renovadas.toLocaleString('pt-BR');
+}
+
+// ─── Tabela ────────────────────────────────────────────────────
+function getDadosAtivos() {
+  if (empresaAtiva === 'consolidado')
+    return empresas.flatMap(e => e.dados.map(s => ({...s, _empresa: e.nome || e.id})));
+  const emp = empresas.find(e => e.id === empresaAtiva);
+  return (emp?.dados || []).map(s => ({...s, _empresa: emp.nome}));
+}
+
+function filtrarTabela() {
+  const busca = document.getElementById('searchInput').value.toLowerCase();
+  const statusFiltro = document.getElementById('filterStatus').value;
+  assinaturasFiltradas = getDadosAtivos().filter(s => {
+    const matchBusca = !busca ||
+      (s.contact?.name||'').toLowerCase().includes(busca) ||
+      (s.contact?.email||'').toLowerCase().includes(busca);
+    const matchStatus = !statusFiltro ? true :
+      statusFiltro === 'renovada' ? s._renovada : s.last_status === statusFiltro;
+    return matchBusca && matchStatus;
+  });
+  paginaAtual = 1;
+  renderTabela();
+}
+
+function renderTabela() {
+  const dados = getDadosAtivos();
+  if (!dados.length) return;
+  if (!assinaturasFiltradas.length) assinaturasFiltradas = [...dados];
+
+  const total = assinaturasFiltradas.length;
+  const inicio = (paginaAtual - 1) * POR_PAGINA;
+  const fim = Math.min(inicio + POR_PAGINA, total);
+  const pagina = assinaturasFiltradas.slice(inicio, fim);
+  const multiEmpresa = empresaAtiva === 'consolidado' && empresas.filter(e => e.kpis).length > 1;
+
+  let html = `<table><thead><tr>
+    <th>Contato</th><th>Email</th>
+    ${multiEmpresa ? '<th>Empresa</th>' : ''}
+    <th>Produto</th><th>Status</th><th>Ciclos</th><th>Próx. ciclo</th><th>Último status</th>
+  </tr></thead><tbody>`;
+
+  pagina.forEach(s => {
+    const badgeClass = s._renovada ? 'renovada' : (s.last_status || 'inactive');
+    const badgeLabel = s._renovada ? 'Renovada' : traduzStatus(s.last_status);
+    html += `<tr>
+      <td>${s.contact?.name || '—'}</td>
+      <td class="muted-cell">${s.contact?.email || '—'}</td>
+      ${multiEmpresa ? `<td class="muted-cell">${s._empresa}</td>` : ''}
+      <td class="muted-cell">${s.product?.name || s.subscription_name || '—'}</td>
+      <td><span class="status-badge ${badgeClass}"><span class="dot"></span>${badgeLabel}</span></td>
+      <td class="mono">${s.charged_times ?? '—'}</td>
+      <td class="mono muted-cell">${s.next_cycle_at ? s.next_cycle_at.slice(0,10) : '—'}</td>
+      <td class="mono muted-cell">${s.last_status_at ? formatTs(s.last_status_at) : '—'}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('tableContainer').innerHTML = html;
+
+  const totalPag = Math.ceil(total / POR_PAGINA);
+  document.getElementById('pagination').style.display = 'flex';
+  document.getElementById('paginationInfo').textContent = `Exibindo ${inicio+1}–${fim} de ${total}`;
+  document.getElementById('btnPrev').disabled = paginaAtual === 1;
+  document.getElementById('btnNext').disabled = paginaAtual >= totalPag;
+}
+
+function irPagina(delta) {
+  paginaAtual += delta;
+  renderTabela();
+  window.scrollTo({ top: document.querySelector('.table-section').offsetTop - 20, behavior: 'smooth' });
+}
+
+// ─── Helpers ───────────────────────────────────────────────────
+function traduzStatus(s) {
+  return { active:'Ativa', canceled:'Cancelada', started:'Em renovação',
+    expired:'Expirada', inactive:'Inativa', pastdue:'Atrasada', trial:'Trial' }[s] || s;
+}
+function formatTs(ts) { return new Date(ts*1000).toLocaleDateString('pt-BR'); }
+function setLoading(on) {
+  const btn = document.getElementById('btnBuscar');
+  btn.disabled = on;
+  btn.classList.toggle('loading', on);
+}
+function mostrarErro(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg; el.style.display = 'block';
+}
+function limparErro() {
+  const el = document.getElementById('errorMsg');
+  el.style.display = 'none';
+}
+</script>
+</body>
+</html>

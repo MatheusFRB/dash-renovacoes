@@ -1,0 +1,9 @@
+{
+  "name": "dash-renovacoes",
+  "version": "1.0.0",
+  "description": "Dashboard de Renovações - Board Academy",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  }
+}
